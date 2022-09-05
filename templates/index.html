@@ -1,0 +1,145 @@
+<!-- AverageHourCrypto/HourAverageCrypto -->
+<!-- Totalchoice hosting & bootstrap for website build  -->
+<!-- Post to GitHub, codereview, reddits python and codereview subs -->
+<!-- Use this to build chart where user can pick the date range they want data from: https://www.youtube.com/watch?v=gTC4KTw3SwA -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bitcoin</title>
+    <style type="text/css">
+
+      .countdownContainer {
+        position: absolute;
+        top: 15%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        text-align: center;
+        background: rgb(0, 0, 0);
+        border: 1px solid #999;
+        padding: 10px;
+        box-shadow: 0 0 5px 3px #ccc;
+      }
+
+      .info {
+        font-size: 80px;
+      }
+    </style>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stylesheet.css') }} ">
+  </head>
+
+  <body>
+        <table class="countdownContainer">
+          <tr class="info">
+            <td colspan="3">Next Update</td>
+          </tr>
+          <tr>
+            <td id="hours"></td>
+            <td id="minutes"></td>
+            <td id="seconds"></td>
+          </tr>
+          <tr>
+            <td>Hours</td>
+            <td>Minutes</td>
+            <td>Seconds</td>
+          </tr>
+        </table>
+        <script type="text/javascript">
+          function countdown() {
+            var now = new Date();
+
+            //var currentDay = (now.getDay + 1)
+            var eventDate = new Date(2050, 12, 31);
+
+            var currentTime = now.getTime();
+            var eventTime = eventDate.getTime();
+
+            var remTime = eventTime - currentTime;
+
+            var s = Math.floor(remTime / 1000);
+            var m = Math.floor(s / 60);
+            var h = Math.floor(m / 60);
+
+            h %= 24;
+            m %= 60;
+            s %= 60;
+
+            h = (h < 10) ? "0" + h : h;
+            m = (m < 10) ? "0" + m : m;
+            s = (s < 10) ? "0" + s : s;
+
+            document.getElementById("hours").textContent = h;
+            document.getElementById("minutes").textContent = m;
+            document.getElementById("seconds").textContent = s;
+
+            setTimeout(countdown, 1000);
+          }
+
+          countdown();
+
+        </script>
+    <h1 id="top"><br><br><br><br><br></h1>
+        <table style="border:1px solid black; margin-left:auto;margin-right:auto;">
+          <tr>
+            <td><b>Days Running: {{ days_running }}&emsp;&emsp;</b></td>
+            <td><b>Data From: {{ data_from }}</b></td>
+          </tr>
+          <tr>
+            <td>Low Time: {{ low_time }}&emsp;&emsp;</td>
+            <td>High Time: {{ high_time }}</td>
+          </tr>
+          <tr>
+            <td>Low Price: ${{ low_price }}&emsp;&emsp;</td>
+            <td>High Price: ${{ high_price }}</td>
+          </tr>
+          <tr>
+            <td>Low Mode: {{ low_mode }}&emsp;&emsp;</td>
+            <td>High Mode: {{ high_mode }}</td>
+          </tr>
+          <tr>
+            <td>Low Accuracy: {{ low_accuracy }}&emsp;&emsp;</td>
+            <td>High Accuracy: {{ high_accuracy }}</td>
+          </tr>
+        </table>
+    <br>
+    <br>
+    <p>
+      The goal of this website is to introduce a form of data that I have not
+      been able to find elsewhere, and to serve as a first-hand test of how
+      accurate this type of data can be.<br>
+      This website also serves as a learning experience for full-stack development,
+      something that I can continually optimize and add new features to as I learn more.
+    </p>
+    <br><br>
+    Disclaimers:<br>
+    <p>
+      1. Past performance is not indicative of future performance, therefore the
+      information here should be taken with a grain of salt.<br>2. Data has
+      only been verified up to 144 data points and <b>assumes</b> there are no errors thereafter.
+    </p>
+
+
+        <!--FIXME: Add an email address-->
+    Suggestions for added features: <a href="mailto:tlrhst3@gmail.com" target="_blank" rel="noopener noreferrer">Email</a><br />
+
+    <form method="post" action="mailto:tlrhst3@gmail.com">
+      <div class="submitContainer">
+        <textarea placeholder="Enter Suggestions" id="suggestionform"></textarea>
+        <input type="submit" value="Submit" id="submitButton" class="submitButton">
+      </div>
+    </form>
+
+    <p>Link to code: <a href="">Github</a>
+      &emsp;&emsp;&emsp; Data source:
+      <a href="https://cointelegraph.com/bitcoin-price-index" target="_blank" rel="noopener noreferrer">
+        Cointelegraph
+      </a>
+    </p>
+    <p>Donations: bc1qyvgelr5x8pclnkeajxnf7g5u33xguda7xcw3sh</p>
+    <!--<a href="#top">Top of page</a>-->
+  </body>
+</html>
