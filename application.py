@@ -18,8 +18,9 @@ application = Flask(__name__)
 # ‘/’ URL is bound with index() function.
 def index():
     recent_stats = stats_sheet.get_all_records()
+    sheet_length = len(recent_stats)
     recent_stats = recent_stats[-1]
-    days_running = len(recent_stats)
+    days_running = sheet_length
     data_from = list(recent_stats.values())[0]
     low_time = list(recent_stats.values())[1]
     low_price = list(recent_stats.values())[2]
