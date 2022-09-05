@@ -6,7 +6,6 @@ import requests
 from datetime import date
 import datetime
 import schedule
-start_time = time.time()
 
 sa = gspread.service_account(filename="service_account.json")
 sh = sa.open("BtcPriceSite")
