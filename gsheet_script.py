@@ -8,10 +8,6 @@ import datetime
 import schedule
 
 sa = gspread.service_account(filename="service_account.json")
-sh = sa.open("BtcPriceSite")
-
-price_sheet = sh.worksheet("Price_Data")
-stats_sheet = sh.worksheet("Stats")
 
 
 def print_price():
@@ -24,13 +20,19 @@ def print_price():
 
 def write_to_price_data_sheet():
     """ WRITING PRICE DATA TO PRICE COLLECTION"""
+    # opens Google Sheet
+    sh = sa.open("BtcPriceSite")
+
+    # defines necessary Google Sheets worksheets
+    price_sheet = sh.worksheet("Price_Data")
+
     # get current date and time
     current_date = str(date.today())
     current_time = str(datetime.datetime.now().time())
 
     # get number of rows in sheet (add one for next empty row)
     next_empty_row = str(len(price_sheet.get_all_values()) + 1)
-
+    print(next_empty_row)
     # add row to sheet
     price_sheet.add_rows(1)
 
@@ -47,6 +49,13 @@ def write_to_price_data_sheet():
 
 def write_to_stats_sheet():
     """ COMPUTES LOW/HIGH TIME/PRICE/MODE """
+    # opens Google Sheet
+    sh = sa.open("BtcPriceSite")
+
+    # defines necessary Google Sheets worksheets
+    price_sheet = sh.worksheet("Price_Data")
+    stats_sheet = sh.worksheet("Stats")
+
     # get all records from price sheet
     all_price_records = price_sheet.get_all_records()
 
