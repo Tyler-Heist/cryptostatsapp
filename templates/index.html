@@ -1,7 +1,5 @@
-<!-- AverageHourCrypto/HourAverageCrypto -->
-<!-- Totalchoice hosting & bootstrap for website build  -->
 <!-- Post to GitHub, codereview, reddits python and codereview subs -->
-<!-- Use this to build chart where user can pick the date range they want data from: https://www.youtube.com/watch?v=gTC4KTw3SwA -->
+<!-- Future functionality: allow user to pick date range for data: https://www.youtube.com/watch?v=gTC4KTw3SwA -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -106,20 +104,40 @@
           </tr>
         </table>
     <br>
-    <br>
     <p>
       The goal of this website is to introduce a form of data that I have not
       been able to find elsewhere, and to serve as a first-hand test of how
       accurate this type of data can be.<br>
       This website also serves as a learning experience for full-stack development,
-      something that I can continually optimize and add new features to as I learn more.
+      something that I will continually optimize and add new features to as I learn more.
+      <br><br>
     </p>
-    <br><br>
-    Disclaimers:<br>
+    <h2>How it works</h2>
     <p>
-      1. Past performance is not indicative of future performance, therefore the
-      information here should be taken with a grain of salt.<br>2. Data has
-      only been verified up to 144 data points and <b>assumes</b> there are no errors thereafter.
+      <b>1.</b> The price of Bitcoin is retrieved from
+      <a href="https://cointelegraph.com/bitcoin-price-index"
+          target="_blank" rel="noopener noreferrer">Cointelegraph</a>
+      every hour and is stored in
+      <a href="https://docs.google.com/spreadsheets/d/1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ/edit#gid=0"
+          target="_blank" rel="noopener noreferrer">this</a>
+      Google Sheets file.<br>
+      <b>2.</b> At midnight every day, the previous 24 hours of data is taken and the hour at which Bitcoin was the highest and
+      lowest is found. This time and price is then stored in
+      <a href="https://docs.google.com/spreadsheets/d/1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ/edit#gid=1815142441"
+          target="_blank" rel="noopener noreferrer">this</a>
+      Google Sheets file.<br>
+      <b>3.</b> The mode for the highest time and the mode for the lowest time are then calculated for all previous
+      high and low times.<br>
+      <b>4.</b> An accuracy is then calculated by dividing the amount of times the high/low time is found by
+      the total amount of datapoints.<br>
+      <h3>The hope is that the longer this website is up, we will learn how accurate this
+          type of data is, and thus, how useful it is.<br>
+          Stats for additional cryptocurrencies will be implemented shortly
+      </h3>
+    </p>
+    <br>
+    <p>Disclaimer: Past performance is not indicative of future performance, therefore the
+      information here should be taken with a grain of salt.
     </p>
 
     To suggest additional features email me at: <a href="mailto:heistproduction@gmail.com" target="_blank" rel="noopener noreferrer">heistproduction@gmail.com</a><br />
