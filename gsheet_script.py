@@ -126,12 +126,18 @@ def write_to_stats_sheet():
     for elem in all_lows:
         if elem == low_mode:
             low_count += 1
+    # add new low_time if applicable; ensures low/high accuracy is up-to-date and not calculated for n-1 days
+    if low_time == low_mode:
+        low_count += 1
 
     # finds how many times mode occurs for the highest
     high_count = 0
     for elem in all_highs:
         if elem == high_mode:
             high_count += 1
+    # add new low_time if applicable; ensures low/high accuracy is up-to-date and not calculated for n-1 days
+    if high_time == high_mode:
+        high_count += 1
 
     # compute percentage (accuracy) for how often mode occurs
     low_accuracy = str(round((low_count / len(all_stats) * 100), 2)) + "%"
