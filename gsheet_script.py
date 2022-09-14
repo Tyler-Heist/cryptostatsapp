@@ -20,11 +20,17 @@ def print_price():
 
 def write_to_price_data_sheet():
     """ WRITING PRICE DATA TO PRICE COLLECTION"""
-    # opens Google Sheet
-    sh = sa.open("BtcPriceSite")
+    while True:
+        try:
+            # opens Google Sheet
+            sh = sa.open("BtcPriceSite")
 
-    # defines necessary Google Sheets worksheets
-    price_sheet = sh.worksheet("Price_Data")
+            # defines necessary Google Sheets worksheets
+            price_sheet = sh.worksheet("Price_Data")
+        except gspread.exceptions.APIError:
+            time.sleep(5)
+            continue
+        break
 
     # get current date and time
     current_date = str(date.today())
@@ -41,23 +47,39 @@ def write_to_price_data_sheet():
     update_time = 'B' + next_empty_row
     update_price = 'C' + next_empty_row
 
-    # write next row of data
-    price_sheet.update(update_date, current_date)
-    price_sheet.update(update_time, current_time)
-    price_sheet.update(update_price, print_price())
+    while True:
+        try:
+            # write next row of data
+            price_sheet.update(update_date, current_date)
+            price_sheet.update(update_time, current_time)
+            price_sheet.update(update_price, print_price())
+        except gspread.exceptions.APIError:
+            time.sleep(5)
+            continue
+        break
 
 
 def write_to_stats_sheet():
     """ COMPUTES LOW/HIGH TIME/PRICE/MODE """
-    # opens Google Sheet
-    sh = sa.open("BtcPriceSite")
+    # continuously try until query is successful
+    while True:
+        try:
+            # opens Google Sheet
+            sh = sa.open("BtcPriceSite")
 
-    # defines necessary Google Sheets worksheets
-    price_sheet = sh.worksheet("Price_Data")
-    stats_sheet = sh.worksheet("Stats")
+            # defines necessary Google Sheets worksheets
+            price_sheet = sh.worksheet("Price_Data")
+            stats_sheet = sh.worksheet("Stats")
 
-    # get all records from price sheet
-    all_price_records = price_sheet.get_all_records()
+            # get all records from price sheet
+            all_price_records = price_sheet.get_all_records()
+            # get all records from stats sheet
+            all_stats = stats_sheet.get_all_records()
+        # catches APIError
+        except gspread.exceptions.APIError:
+            time.sleep(5)
+            continue
+        break
 
     # check if there are 24 records, return if not
     if len(all_price_records) < 24:
@@ -104,9 +126,6 @@ def write_to_stats_sheet():
     high_time = time_conversion[max_price_time[0:2]]
     low_time = time_conversion[min_price_time[0:2]]
 
-    # get all records from stats sheet
-    all_stats = stats_sheet.get_all_records()
-
     # create list to store all data from 'Low Time' and 'High Time'
     all_lows = []
     all_highs = []
@@ -149,9 +168,6 @@ def write_to_stats_sheet():
     # get number of rows in sheet (add one for next empty row)
     next_empty_row = str(len(all_stats) + 2)
 
-    # add row to sheet
-    stats_sheet.add_rows(1)
-
     # set parameters for where to put next row of data
     update_date = 'A' + next_empty_row
     update_low_time = 'B' + next_empty_row
@@ -163,16 +179,24 @@ def write_to_stats_sheet():
     update_high_mode = 'H' + next_empty_row
     update_high_accuracy = 'I' + next_empty_row
 
-    # write next row of data
-    stats_sheet.update(update_date, current_date)
-    stats_sheet.update(update_low_time, low_time)
-    stats_sheet.update(update_low_price, minimum_price)
-    stats_sheet.update(update_low_mode, low_mode)
-    stats_sheet.update(update_low_accuracy, low_accuracy)
-    stats_sheet.update(update_high_time, high_time)
-    stats_sheet.update(update_high_price, maximum_price)
-    stats_sheet.update(update_high_mode, high_mode)
-    stats_sheet.update(update_high_accuracy, high_accuracy)
+    while True:
+        try:
+            # adds row to sheet
+            stats_sheet.add_rows(1)
+            # write next row of data
+            stats_sheet.update(update_date, current_date)
+            stats_sheet.update(update_low_time, low_time)
+            stats_sheet.update(update_low_price, minimum_price)
+            stats_sheet.update(update_low_mode, low_mode)
+            stats_sheet.update(update_low_accuracy, low_accuracy)
+            stats_sheet.update(update_high_time, high_time)
+            stats_sheet.update(update_high_price, maximum_price)
+            stats_sheet.update(update_high_mode, high_mode)
+            stats_sheet.update(update_high_accuracy, high_accuracy)
+        except gspread.exceptions.APIError:
+            time.sleep(5)
+            continue
+        break
 
 
 def main():
