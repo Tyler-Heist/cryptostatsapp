@@ -1,4 +1,3 @@
-<!-- Post to GitHub, codereview, reddits python and codereview subs -->
 <!-- Future functionality: allow user to pick date range for data: https://www.youtube.com/watch?v=gTC4KTw3SwA -->
 
 <!DOCTYPE html>
@@ -7,50 +6,43 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bitcoin</title>
+    <title>CryptoStatsApp</title>
+    <link rel="icon" type="image/x-icon"
+          href="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/256/Bitcoin-BTC-icon.png">
     <style type="text/css">
-
-      .countdownContainer {
-        position: absolute;
-        top: 15%;
-        left: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        text-align: center;
-        background: rgb(0, 0, 0);
-        border: 1px solid #999;
-        padding: 10px;
-        box-shadow: 0 0 5px 3px #ccc;
-      }
-
-      .info {
-        font-size: 80px;
-      }
     </style>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/stylesheet.css') }} ">
   </head>
 
   <body>
-        <table class="countdownContainer">
-          <tr class="info">
-            <td colspan="3">Next Update</td>
-          </tr>
-          <tr>
-            <td id="hours"></td>
-            <td id="minutes"></td>
-            <td id="seconds"></td>
-          </tr>
-          <tr>
-            <td>Hours</td>
-            <td>Minutes</td>
-            <td>Seconds</td>
-          </tr>
-        </table>
+      <div class="bodyContent">
+        <div class="countContain">
+          <table class="countdownContainer">
+            <tr class="info">
+              <td colspan="3">Next Update</td>
+            </tr>
+            <tr>
+              <td id="hours"></td>
+              <td id="minutes"></td>
+              <td id="seconds"></td>
+            </tr>
+            <tr>
+              <td>Hours</td>
+              <td>Minutes</td>
+              <td>Seconds</td>
+            </tr>
+          </table>
+        </div>
         <script type="text/javascript">
+          function reloadPage() {
+            alert("refreshed");
+            return window.location.reload();
+          }
+
           function countdown() {
             var now = new Date();
 
-            //var currentDay = (now.getDay + 1)
             var eventDate = new Date(2050, 12, 31);
 
             var currentTime = now.getTime();
@@ -75,12 +67,16 @@
             document.getElementById("seconds").textContent = s;
 
             setTimeout(countdown, 1000);
+
+            if(h == 0 && m == 0 && s == 0) {
+              reloadPage();
+            }
           }
 
           countdown();
 
         </script>
-    <h1 id="top"><br><br><br><br><br></h1>
+        <h1 id="top"></h1>
         <table style="border:1px solid black; margin-left:auto;margin-right:auto;">
           <tr>
             <td><b>Days Running: {{ days_running }}&emsp;&emsp;</b></td>
@@ -103,59 +99,53 @@
             <td>High Accuracy: {{ high_accuracy }}</td>
           </tr>
         </table>
-    <br>
-    <p>
-      The goal of this website is to introduce a form of data that I have not
-      been able to find elsewhere, and to serve as a first-hand test of how
-      accurate this type of data can be.<br>
-      This website also serves as a learning experience for full-stack development,
-      something that I will continually optimize and add new features to as I learn more.
-      <br><br>
-    </p>
-    <h2>How it works</h2>
-    <p>
-      <b>1.</b> The price of Bitcoin is retrieved from
-      <a href="https://cointelegraph.com/bitcoin-price-index"
-          target="_blank" rel="noopener noreferrer">Cointelegraph</a>
-      every hour and is stored in
-      <a href="https://docs.google.com/spreadsheets/d/1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ/edit#gid=0"
-          target="_blank" rel="noopener noreferrer">this</a>
-      Google Sheets file.<br>
-      <b>2.</b> At midnight every day, the previous 24 hours of data is taken and the hour at which Bitcoin was the highest and
-      lowest is found. This time and price is then stored in
-      <a href="https://docs.google.com/spreadsheets/d/1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ/edit#gid=1815142441"
-          target="_blank" rel="noopener noreferrer">this</a>
-      Google Sheets file.<br>
-      <b>3.</b> The mode for the highest time and the mode for the lowest time are then calculated for all previous
-      high and low times.<br>
-      <b>4.</b> An accuracy is then calculated by dividing the amount of times the high/low time is found by
-      the total amount of datapoints.<br>
-      <h3>The hope is that the longer this website is up, we will learn how accurate this
-          type of data is, and thus, how useful it is.<br>
-          Stats for additional cryptocurrencies will be implemented shortly
-      </h3>
-    </p>
-    <br>
-    <p>Disclaimer: Past performance is not indicative of future performance, therefore the
-      information here should be taken with a grain of salt.
-    </p>
+        <p>
+          The goal of this website is to introduce a form of data that I have not
+          been able to find elsewhere, and to serve as a first-hand test of how
+          accurate this type of data can be.<br>
+          This website also serves as a learning experience for full-stack development,
+          something that I will continually optimize and add new features to as I learn more.
+        </p>
+        <h2>How it works</h2>
+        <p>
+          <b>1.</b> The price of Bitcoin is retrieved from
+          <a href="https://cointelegraph.com/bitcoin-price-index"
+              target="_blank" rel="noopener noreferrer">Cointelegraph</a>
+          every hour and is stored in
+          <a href="https://docs.google.com/spreadsheets/d/1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ/edit#gid=0"
+              target="_blank" rel="noopener noreferrer">this</a>
+          Google Sheets file.<br>
+          <b>2.</b> At midnight every day, the previous 24 hours of data is taken and the hour at which Bitcoin was the highest and
+          lowest is found. This time and price is then stored in
+          <a href="https://docs.google.com/spreadsheets/d/1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ/edit#gid=1815142441"
+              target="_blank" rel="noopener noreferrer">this</a>
+          Google Sheets file.<br>
+          <b>3.</b> The mode for the highest time and the mode for the lowest time are then calculated for all previous
+          high and low times.<br>
+          <b>4.</b> An accuracy is then calculated by dividing the amount of times the high/low time is found by
+          the total amount of datapoints.<br>
 
-    To suggest additional features email me at: <a href="mailto:heistproduction@gmail.com" target="_blank" rel="noopener noreferrer">heistproduction@gmail.com</a><br />
-    <!--
-    <form method="post" action="mailto:heistproduction@gmail.com">
-      <div class="submitContainer">
-        <textarea placeholder="Enter Suggestions" id="suggestionform"></textarea>
-        <input type="submit" value="Submit" id="submitButton" class="submitButton">
+        </p>
+        <h3>The hope is that the longer this website is up, we will learn how accurate this
+              type of data is, and thus, how useful it is.<br>
+              Stats for additional cryptocurrencies will be implemented shortly
+        </h3>
+        <p>Disclaimer: Past performance is not indicative of future performance, therefore the
+          information here should be taken with a grain of salt.
+          <br><br>
+          To suggest additional features email me at: <a href="mailto:heistproduction@gmail.com" target="_blank"
+                                                       rel="noopener noreferrer">heistproduction@gmail.com</a>
+          <!-- add submit form -->
+          <br><br>
+          Link to code: <a href="https://github.com/Tyler-Heist/cryptostatsapp" target="_blank">Github</a>
+          &emsp;&emsp;&emsp; Data source:
+          <a href="https://cointelegraph.com/bitcoin-price-index" target="_blank" rel="noopener noreferrer">
+            Cointelegraph
+          </a>
+          <br><br>
+          Donations: bc1qyvgelr5x8pclnkeajxnf7g5u33xguda7xcw3sh
+          <!--<a href="#top">Top of page</a>-->
+        </p>
       </div>
-    </form>
-    -->
-    <p>Link to code: <a href="https://github.com/Tyler-Heist/cryptostatsapp" target="_blank">Github</a>
-      &emsp;&emsp;&emsp; Data source:
-      <a href="https://cointelegraph.com/bitcoin-price-index" target="_blank" rel="noopener noreferrer">
-        Cointelegraph
-      </a>
-    </p>
-    <p>Donations: bc1qyvgelr5x8pclnkeajxnf7g5u33xguda7xcw3sh</p>
-    <!--<a href="#top">Top of page</a>-->
   </body>
 </html>

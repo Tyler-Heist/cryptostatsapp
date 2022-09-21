@@ -9,6 +9,29 @@ body {
   text-align: center;
 }
 
+.bodyContent {
+    display: grid;
+    margin-top: 4vw;
+}
+
+.countContain {
+    margin: auto;
+}
+
+.countdownContainer {
+    top: 15%;
+    left: 50%;
+    text-align: center;
+    background: rgb(0, 0, 0);
+    border: 1px solid #999;
+    padding: 10px;
+    box-shadow: 0 0 5px 3px #ccc;
+    }
+
+.info {
+font-size: 80px;
+}
+
 * {
   box-sizing: border-box;
 }
