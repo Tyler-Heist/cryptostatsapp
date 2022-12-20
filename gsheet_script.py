@@ -1,3 +1,4 @@
+import http.client
 import statistics
 import sys
 import time
@@ -6,6 +7,7 @@ import requests
 from datetime import date
 import datetime
 import schedule
+import urllib3.exceptions
 
 sa = gspread.service_account(filename="service_account.json")
 
@@ -27,7 +29,12 @@ def write_to_price_data_sheet():
 
             # defines necessary Google Sheets worksheets
             price_sheet = sh.worksheet("Price_Data")
-        except gspread.exceptions.APIError:
+        # catches errors
+        except (gspread.exceptions.APIError,
+                requests.exceptions.ReadTimeout,
+                urllib3.exceptions.ReadTimeoutError,
+                http.client.RemoteDisconnected) as e:
+            print(e)
             time.sleep(5)
             continue
         break
@@ -75,8 +82,12 @@ def write_to_stats_sheet():
             all_price_records = price_sheet.get_all_records()
             # get all records from stats sheet
             all_stats = stats_sheet.get_all_records()
-        # catches APIError
-        except gspread.exceptions.APIError:
+        # catches errors
+        except (gspread.exceptions.APIError,
+                requests.exceptions.ReadTimeout,
+                urllib3.exceptions.ReadTimeoutError,
+                http.client.RemoteDisconnected) as e:
+            print(e)
             time.sleep(5)
             continue
         break

@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap");
 
 body {
-  background: #f6f6f6;
+  background: #F6F6F6;
   font-family: "Montserrat", sans-serif;
   font-size: 14pt;
   background-color: black;
@@ -10,72 +10,89 @@ body {
 }
 
 .bodyContent {
-    display: grid;
-    margin-top: 4vw;
-}
-
-.countContain {
-    margin: auto;
+    margin: 2.5vw auto;
+    width: 75%;
 }
 
 .countdownContainer {
+    margin: auto;
+    max-width: 540px;
     top: 15%;
-    left: 50%;
-    text-align: center;
-    background: rgb(0, 0, 0);
-    border: 1px solid #999;
+    background: black;
+    border: 1px solid #999999;
     padding: 10px;
-    box-shadow: 0 0 5px 3px #ccc;
+    box-shadow: 0 0 5px 3px #CCCCCC;
     }
 
 .info {
 font-size: 80px;
 }
 
-* {
-  box-sizing: border-box;
+.hours, .minutes, .seconds {
+    width:33%;
 }
 
-/* Create two equal columns that floats next to each other */
-.column {
-  float: left;
-  width: 20%;
-  padding: 10px;
+.data-table {
+    width: 50%;
+    float: left;
+    padding: 20px 0 30px 0;
 }
 
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
+.data-table1 {
+    float: inline-end;
+    padding-right: 40px;
 }
 
+.data-table2 {
+    float: inline-start;
+    padding-left: 40px;
+}
+
+li {
+    padding: 10px;
+}
+
+.description2 {
+    padding-top: 5px;
+}
+
+.data-table-sd {
+    width: 50%;
+    float: left;
+    padding: 0 0 40px 0;
+}
+
+p:last-of-type {
+    margin-bottom: 0;
+}
 /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
-  .column {
-    width: 100%;
-  }
-}
-
-.bitcoinPricePicture {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 80%;
-}
-
-.submitContainer {
-  display: flex;
-  justify-content: center;
-}
-
-input[type="button"] {
-  height: fit-content;
-  margin-left: 1em;
+    .data-table {
+        width: 100%;
+        padding: 0;
+    }
+    .data-table1 {
+        float: none;
+        margin: auto;
+        padding: 26px 0 0 0;
+    }
+    .data-table2 {
+        float: none;
+        margin: auto;
+        padding: 20px 0;
+    }
+    .data-table-sd {
+        width: 100%;
+        padding: 0;
+    }
 }
 
 a {
   color: aqua;
+}
+
+a:hover {
+  color: rgb(0, 120, 200);
 }
 
 a:visited {
