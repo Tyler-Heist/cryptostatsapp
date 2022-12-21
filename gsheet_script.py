@@ -60,7 +60,11 @@ def write_to_price_data_sheet():
             price_sheet.update(update_date, current_date)
             price_sheet.update(update_time, current_time)
             price_sheet.update(update_price, print_price())
-        except gspread.exceptions.APIError:
+        except (gspread.exceptions.APIError,
+                requests.exceptions.ReadTimeout,
+                urllib3.exceptions.ReadTimeoutError,
+                http.client.RemoteDisconnected) as e:
+            print(e)
             time.sleep(5)
             continue
         break
@@ -174,7 +178,8 @@ def write_to_stats_sheet():
     high_accuracy = str(round((high_count / len(all_stats) * 100), 2)) + "%"
 
     # get current date
-    current_date = str(date.today())
+    current_date = date.today()
+    yesterday = str(current_date - datetime.timedelta(days = 1))
 
     # get number of rows in sheet (add one for next empty row)
     next_empty_row = str(len(all_stats) + 2)
@@ -195,7 +200,7 @@ def write_to_stats_sheet():
             # adds row to sheet
             stats_sheet.add_rows(1)
             # write next row of data
-            stats_sheet.update(update_date, current_date)
+            stats_sheet.update(update_date, yesterday)
             stats_sheet.update(update_low_time, low_time)
             stats_sheet.update(update_low_price, minimum_price)
             stats_sheet.update(update_low_mode, low_mode)
@@ -204,7 +209,11 @@ def write_to_stats_sheet():
             stats_sheet.update(update_high_price, maximum_price)
             stats_sheet.update(update_high_mode, high_mode)
             stats_sheet.update(update_high_accuracy, high_accuracy)
-        except gspread.exceptions.APIError:
+        except (gspread.exceptions.APIError,
+                requests.exceptions.ReadTimeout,
+                urllib3.exceptions.ReadTimeoutError,
+                http.client.RemoteDisconnected) as e:
+            print(e)
             time.sleep(5)
             continue
         break
