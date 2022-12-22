@@ -16,23 +16,21 @@
   </head>
   <body>
       <div class="bodyContent">
-        <div>
-          <table class="countdownContainer">
-            <tr class="info">
-              <td colspan="3">Next Update</td>
-            </tr>
-            <tr>
-              <td class="hours" id="hours"></td>
-              <td class="minutes" id="minutes"></td>
-              <td class="seconds" id="seconds"></td>
-            </tr>
-            <tr>
-              <td class="hours">Hours</td>
-              <td class="minutes">Minutes</td>
-              <td class="seconds">Seconds</td>
-            </tr>
-          </table>
-        </div>
+        <table class="countdownContainer">
+          <tr class="info">
+            <td colspan="3">Next Update</td>
+          </tr>
+          <tr>
+            <td class="hours" id="hours"></td>
+            <td class="minutes" id="minutes"></td>
+            <td class="seconds" id="seconds"></td>
+          </tr>
+          <tr>
+            <td class="hours">Hours</td>
+            <td class="minutes">Minutes</td>
+            <td class="seconds">Seconds</td>
+          </tr>
+        </table>
         <script type="text/javascript">
           function countdown() {
             var now = new Date();
@@ -60,12 +58,12 @@
             document.getElementById("minutes").textContent = m;
             document.getElementById("seconds").textContent = s;
 
-            setTimeout(countdown, 1000);
-
             if(h == 23 && m == 59 && s == 50) {
               console.log("Refreshed: " + now);
               window.location.reload();
             }
+
+            setTimeout(countdown, 1000);
           }
 
           countdown();
