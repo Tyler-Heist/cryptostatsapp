@@ -1,7 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap");
 
 body {
-  background: #F6F6F6;
   font-family: "Montserrat", sans-serif;
   font-size: 14pt;
   background-color: black;
@@ -17,7 +16,6 @@ body {
 .countdownContainer {
     margin: auto;
     max-width: 540px;
-    background: black;
     border: 1px solid #999999;
     padding: 10px;
     box-shadow: 0 0 5px 3px #CCCCCC;
@@ -65,9 +63,9 @@ p:last-of-type {
     margin-bottom: 0;
 }
 /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 720px) {
     .bodyContent {
-        width: 100%;
+        width: unset;
     }
     .data-table {
         width: 100%;
