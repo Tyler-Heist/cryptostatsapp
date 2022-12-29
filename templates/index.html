@@ -26,9 +26,9 @@
             <td class="seconds" id="seconds"></td>
           </tr>
           <tr>
-            <td class="hours">Hours</td>
-            <td class="minutes">Minutes</td>
-            <td class="seconds">Seconds</td>
+            <td class="hours" id="hoursText">Hours</td>
+            <td class="minutes" id="minutesText">Minutes</td>
+            <td class="seconds" id="secondsText">Seconds</td>
           </tr>
         </table>
         <script type="text/javascript">
@@ -50,9 +50,13 @@
             m %= 60;
             s %= 60;
 
-            h = (h < 10) ? "0" + h : h;
-            m = (m < 10) ? "0" + m : m;
-            s = (s < 10) ? "0" + s : s;
+            var hourText = document.getElementById("hoursText");
+            var minuteText = document.getElementById("minutesText");
+            var secondText = document.getElementById("secondsText");
+
+            hourText = (h != 1) ? hourText.textContent="Hours" : hourText.textContent="Hour";
+            minuteText = (m != 1) ? minuteText.textContent="Minutes" : minuteText.textContent="Minute";
+            secondText = (s != 1) ? secondText.textContent="Seconds" : secondText.textContent="Second";
 
             document.getElementById("hours").textContent = h;
             document.getElementById("minutes").textContent = m;
