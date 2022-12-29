@@ -36,12 +36,12 @@ font-size: 80px;
 }
 
 .data-table1 {
-    float: inline-end;
+    float: right;
     padding-right: 40px;
 }
 
 .data-table2 {
-    float: inline-start;
+    float: left;
     padding-left: 40px;
 }
 
