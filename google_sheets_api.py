@@ -36,7 +36,6 @@ def get_values(credentials, sheet_id, sheet_range):
         if response:
             return response
         return 'No data found'
-
     except HttpError as e:
         return e
 
@@ -54,6 +53,5 @@ def append_values(credentials, sheet_id, sheet_name, values):
         )
         response = request.execute()
         return response
-
     except HttpError as e:
         return e

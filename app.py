@@ -1,7 +1,8 @@
-import google_sheets_api
 # Importing flask module in the project is mandatory
 # An object of Flask class is our WSGI application.
 from flask import Flask, render_template
+
+import google_sheets_api
 
 SHEET_ID = '1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ'
 STATS_SHEET = 'Stats'
@@ -29,4 +30,3 @@ if __name__ == '__main__':
     # run() method of Flask class runs the application
     # on the local development server.
     application.run(debug=True)
-
