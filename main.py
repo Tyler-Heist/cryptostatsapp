@@ -74,9 +74,8 @@ def update_stats_sheet(price):
 
 def main():
     try:
-        btc_price = get_price()
         # Runs update_stats_sheet on the first minute of every hour
-        schedule.every().hour.at("00:01").do(update_stats_sheet(price=btc_price))
+        schedule.every().hour.at("00:01").do(update_stats_sheet(price=get_price()))
         while True:
             schedule.run_pending()
             time.sleep(1)
