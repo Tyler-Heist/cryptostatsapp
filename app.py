@@ -1,11 +1,14 @@
+from pathlib import Path
+
 from flask import Flask, render_template
 
 import google_sheets_api
 
 SHEET_ID = '1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ'
+THIS_FOLDER = Path(__file__).parent.resolve()
 # Flask constructor takes the name of
 # current module (__name__) as argument.
-app = Flask(__name__)
+app = Flask(__name__, template_folder=str(THIS_FOLDER / 'templates'))
 
 
 # The route() function of the Flask class is a decorator,
