@@ -16,7 +16,9 @@ def get_price():
     return current_btc_price.json()['bpi']['USD']['rate']
 
 
-def update_stats_sheet(price):
+def update_stats_sheet():
+    price = get_price()
+
     # Get date info
     date = str(datetime.date.today())
     now = datetime.datetime.now()
@@ -73,7 +75,7 @@ def update_stats_sheet(price):
 def main():
     try:
         # Runs update_stats_sheet on the first minute of every hour
-        schedule.every().hour.at('00:01').do(lambda: update_stats_sheet(price=get_price()))
+        schedule.every().hour.at('00:01').do(update_stats_sheet)
         while True:
             schedule.run_pending()
             time.sleep(1)
