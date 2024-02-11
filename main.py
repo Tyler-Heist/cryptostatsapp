@@ -23,17 +23,15 @@ def update_stats_sheet(price):
     current_time = now.strftime('%H:%M:%S')
     time_zone = get_localzone().tzname(now)
 
-    # Validate google sheet credentials
-    creds = google_sheets_api.get_creds()
     SHEET_ID = '1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ'
     PRICE_SHEET = 'Price_Data'
     STATS_SHEET = 'Stats'
     values = [date, current_time, time_zone, price]
     # Update Price_Data Google Sheet
-    google_sheets_api.append_values(credentials=creds, sheet_id=SHEET_ID, sheet_name=PRICE_SHEET, values=values)
+    google_sheets_api.append_values(sheet_id=SHEET_ID, sheet_name=PRICE_SHEET, values=values)
 
     # Get all values from Price_Data Google Sheet
-    vals = google_sheets_api.get_values(credentials=creds, sheet_id=SHEET_ID, sheet_range=f'{PRICE_SHEET}!A1:D')
+    vals = google_sheets_api.get_values(sheet_id=SHEET_ID, sheet_range=f'{PRICE_SHEET}!A1:D')
     # If a full days prices have been retrieved, calculate the days highs and lows
     if (len(vals) - 1) % 24 == 0:
         print(f'24 hours of data available. Data count: {len(vals) - 1}')
@@ -50,7 +48,7 @@ def update_stats_sheet(price):
         # Put all data in list to add to dataframe we will be created
         new_row = [[date, low_time, low_price, '', '', high_time, high_price, '', '']]
         # Get all values from Stats Google Sheet
-        vals = google_sheets_api.get_values(credentials=creds, sheet_id=SHEET_ID, sheet_range=f'{STATS_SHEET}!A1:I')
+        vals = google_sheets_api.get_values(sheet_id=SHEET_ID, sheet_range=f'{STATS_SHEET}!A1:I')
         # Put values into dataframe, adding new_row to the end of the dataframe
         stats = pd.concat([pd.DataFrame(vals[1:]), pd.DataFrame(new_row)])
         stats = stats.reset_index(drop=True)
@@ -66,7 +64,7 @@ def update_stats_sheet(price):
         high_accuracy = f'{high_counts[high_mode] / sum(high_counts) * 100:.2f}%'
         # Now that we have all values needed, fill in missing values from new_row list and add row to Stats Google Sheet
         new_stats = [date, low_time, low_price, low_mode, low_accuracy, high_time, high_price, high_mode, high_accuracy]
-        return google_sheets_api.append_values(credentials=creds, sheet_id=SHEET_ID, sheet_name=STATS_SHEET, values=new_stats)
+        return google_sheets_api.append_values(sheet_id=SHEET_ID, sheet_name=STATS_SHEET, values=new_stats)
     else:
         # If a full days prices have not been retrieved, return count of values
         return f'24 hours of data not available. Data count: {len(vals) - 1}'
@@ -75,7 +73,7 @@ def update_stats_sheet(price):
 def main():
     try:
         # Runs update_stats_sheet on the first minute of every hour
-        schedule.every().hour.at("00:01").do(update_stats_sheet(price=get_price()))
+        schedule.every().hour.at('00:01').do(lambda: update_stats_sheet(price=get_price()))
         while True:
             schedule.run_pending()
             time.sleep(1)
