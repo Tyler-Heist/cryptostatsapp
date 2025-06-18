@@ -1,89 +1,104 @@
-import datetime
-import sys
-import time
-
+from tzlocal import get_localzone
+from dotenv import load_dotenv
+import google_sheets_api
 import pandas as pd
+import datetime
 import requests
 import schedule
-from tzlocal import get_localzone
+import sys
+import time
+import os
 
-import google_sheets_api
+# FIXME: Change to execute based on CST time
+
+load_dotenv()
+
+SPREADSHEET_ID = '1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ'
+PRICE_DATA_SHEET = 'Price_Data!A1:D'
+PREVIOUS_DAY_STATS_SHEET = 'Previous_Day_Stats!A:E'
+STATS_SHEET = 'Stats!A1:I'
 
 
-def get_price():
-    # calls coindesk.com API to get BTC price
-    current_btc_price = requests.get('https://api.coindesk.com/v1/bpi/currentprice.json')
-    return current_btc_price.json()['bpi']['USD']['rate']
+def main() -> None:
+    # Parameters for API call
+    params = {
+        'market': 'coinbase',
+        'instruments': 'BTC-USD',
+        'apply_mapping': 'true',
+        'api_key': os.getenv('API_KEY')
+    }
 
-
-def update_stats_sheet():
-    price = get_price()
+    # Get current BTC price coindesk.com via API (gets data from Coinbase)
+    response = requests.get('https://data-api.coindesk.com/spot/v1/latest/tick', params=params)
+    current_price = response.json().get('Data', '').get('BTC-USD', '').get('PRICE', '')
 
     # Get date info
-    date = str(datetime.date.today())
     now = datetime.datetime.now()
+    current_date = now.strftime('%Y-%m-%d')
     current_time = now.strftime('%H:%M:%S')
     time_zone = get_localzone().tzname(now)
 
-    SHEET_ID = '1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ'
-    PRICE_SHEET = 'Price_Data'
-    STATS_SHEET = 'Stats'
-    values = [date, current_time, time_zone, price]
-    # Update Price_Data Google Sheet
-    google_sheets_api.append_values(sheet_id=SHEET_ID, sheet_name=PRICE_SHEET, values=values)
+    # Append most recent price to Price_Data Google Sheet
+    data = [current_date, current_time, time_zone, current_price]
+    google_sheets_api.append_rows(data=data, spreadsheet_id=SPREADSHEET_ID, spreadsheet_range=PRICE_DATA_SHEET)
 
-    # Get all values from Price_Data Google Sheet
-    vals = google_sheets_api.get_values(sheet_id=SHEET_ID, sheet_range=f'{PRICE_SHEET}!A1:D')
-    # If a full days prices have been retrieved, calculate the days highs and lows
-    if (len(vals) - 1) % 24 == 0:
-        print(f'24 hours of data available. Data count: {len(vals) - 1}')
-        # Put data into dataframe
-        df = pd.DataFrame(vals[-24:], columns=['Date', 'Time', 'Time Zone', 'Price'])
-        # Find rows with lowest and highest prices and get their respective prices and times
-        min_row = df[df.Price == df.Price.min()]
-        max_row = df[df.Price == df.Price.max()]
-        date = min_row['Date'].values[0]
-        low_time = f'{min_row["Time"].values[0][:2]}:00'
-        low_price = min_row['Price'].values[0]
-        high_time = f'{max_row["Time"].values[0][:2]}:00'
-        high_price = max_row['Price'].values[0]
-        # Put all data in list to add to dataframe we will be created
-        new_row = [[date, low_time, low_price, '', '', high_time, high_price, '', '']]
-        # Get all values from Stats Google Sheet
-        vals = google_sheets_api.get_values(sheet_id=SHEET_ID, sheet_range=f'{STATS_SHEET}!A1:I')
-        # Put values into dataframe, adding new_row to the end of the dataframe
-        stats = pd.concat([pd.DataFrame(vals[1:]), pd.DataFrame(new_row)])
-        stats = stats.reset_index(drop=True)
-        # Add column names
-        stats.columns = vals[0]
-        # Find mode when price was at its lowest, calculate percentage of mode
-        low_mode = stats['Low Time'].mode().values[0]
-        low_counts = stats['Low Time'].value_counts()
-        low_accuracy = f'{low_counts[low_mode] / sum(low_counts) * 100:.2f}%'
-        # Find mode when price was at its highest, calculate percentage of mode
-        high_mode = stats['High Time'].mode().values[0]
-        high_counts = stats['High Time'].value_counts()
-        high_accuracy = f'{high_counts[high_mode] / sum(high_counts) * 100:.2f}%'
-        # Now that we have all values needed, fill in missing values from new_row list and add row to Stats Google Sheet
-        new_stats = [date, low_time, low_price, low_mode, low_accuracy, high_time, high_price, high_mode, high_accuracy]
-        return google_sheets_api.append_values(sheet_id=SHEET_ID, sheet_name=STATS_SHEET, values=new_stats)
-    else:
-        # If a full days prices have not been retrieved, return count of values
-        return f'24 hours of data not available. Data count: {len(vals) - 1}'
+    start_time = datetime.time(0, 0, 0)
+    end_time = datetime.time(0, 59, 59)
 
+    # Only execute the code below if the time is between midnight and 1AM
+    if start_time <= now.time() <= end_time:
+        # Get all values from Previous_Day_Stats Google Sheet
+        previous_day_stats = google_sheets_api.get_data(
+            spreadsheet_id=SPREADSHEET_ID,
+            spreadsheet_range=PREVIOUS_DAY_STATS_SHEET
+        )
 
-def main():
-    try:
-        # Runs update_stats_sheet on the first minute of every hour
-        schedule.every().hour.at('00:01').do(update_stats_sheet)
-        while True:
-            schedule.run_pending()
-            time.sleep(1)
-    except KeyboardInterrupt:  # used to exit cleanly if stopped by the user
-        sys.exit(0)
+        test = previous_day_stats['Low Time'][0][:5]
+
+        # New row to add to df before calculating most up-to-date mode
+        new_row = {
+            'Date': previous_day_stats['Date'][0],
+            'Low Time': previous_day_stats['Low Time'][0][:5],
+            'Low Price': previous_day_stats['Low Price'][0],
+            'Most Frequent Low': '',
+            'Low Accuracy': '=COUNTIF(INDIRECT("D2:D" & ROW()), INDIRECT("D" & ROW()))/ROW()',
+            'High Time': previous_day_stats['High Time'][0][:5],
+            'High Price': previous_day_stats['High Price'][0],
+            'Most Frequent High': '',
+            'High Accuracy': '=COUNTIF(INDIRECT("H2:H" & ROW()), INDIRECT("H" & ROW()))/ROW()'
+        }
+
+        # Get all daily stats
+        stats = google_sheets_api.get_data(spreadsheet_id=SPREADSHEET_ID, spreadsheet_range=STATS_SHEET)
+
+        # Add new row to stats df
+        stats.loc[len(stats)] = new_row
+
+        # Calculate mode of Most Frequent Low and Most Frequent High columns
+        modes = stats.mode()
+        low_mode = modes['Most Frequent Low'].tolist()
+        high_mode = modes['Most Frequent High'].tolist()
+
+        # Add modes into new_row
+        new_row_index = len(stats) - 1
+        stats.at[new_row_index, 'Most Frequent Low'] = f"'{low_mode[0]}" if low_mode else 'N/A'
+        stats.at[new_row_index, 'Most Frequent High'] = f"'{high_mode[0]}" if high_mode else 'N/A'
+
+        # Convert last row in df (new_row) back into a list
+        row_to_add = stats.iloc[new_row_index].tolist()
+
+        # Add "new_row" into Google Sheet
+        google_sheets_api.append_rows(data=row_to_add, spreadsheet_id=SPREADSHEET_ID, spreadsheet_range=STATS_SHEET)
 
 
 # will run main only when this file is explicitly run
 # used to avoid execution when file is imported into another file
 if __name__ == "__main__":
-    main()
+    try:
+        # main()
+        schedule.every().hour.at('01:00').do(main)
+        while True:
+            schedule.run_pending()
+            time.sleep(1)
+    except KeyboardInterrupt:
+        sys.exit(0)
