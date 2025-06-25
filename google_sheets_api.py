@@ -10,24 +10,27 @@ import os
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+THIS_FOLDER = Path(__file__).parent.resolve()
+CREDENTIALS_PATH = THIS_FOLDER / 'credentials.json'
+TOKEN_PATH = THIS_FOLDER / 'token.json'
 
 
 def validate_creds() -> Credentials:
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first time.
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    if os.path.exists(str(TOKEN_PATH)):
+        creds = Credentials.from_authorized_user_file(str(TOKEN_PATH), SCOPES)
     # If there are no valid credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+                client_secrets_file=str(CREDENTIALS_PATH), scopes=SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('token.json', 'w') as token:
+        with open(TOKEN_PATH, 'w') as token:
             token.write(creds.to_json())
     return creds
 
