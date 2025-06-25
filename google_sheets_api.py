@@ -5,6 +5,7 @@ from googleapiclient.errors import HttpError
 from googleapiclient.discovery import build
 from pathlib import Path
 import pandas as pd
+import time
 import os
 
 # If modifying these scopes, delete the file token.json.
@@ -17,7 +18,7 @@ def validate_creds() -> Credentials:
     # created automatically when the authorization flow completes for the first time.
     if os.path.exists('token.json'):
         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
+    # If there are no valid credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
@@ -86,3 +87,14 @@ def append_rows(data: pd.DataFrame | list, spreadsheet_id: str, spreadsheet_rang
         request.execute()
     except HttpError as e:
         raise RuntimeError(f'Failed to append rows in {spreadsheet_range}: {e}')
+
+
+def scheduled_token_refresh():
+    while True:
+        try:
+            # validate creds/refresh token
+            validate_creds()
+        except Exception as e:
+            print(f'Credential refresh failed: {e}')
+        # perform validation/refresh every 6 hours
+        time.sleep(60 * 60 * 6)
