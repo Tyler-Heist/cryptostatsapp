@@ -135,7 +135,7 @@ def main() -> None:
                 )
                 return
     except Exception as e:
-        logging.exception(f'Unhandled exception:')
+        logging.exception(f'Unhandled exception: {e}')
     finally:
         logging.info(f"{'-' * 35} EXECUTION COMPLETED {'-' * 35}\n\n")
 

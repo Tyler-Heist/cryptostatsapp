@@ -2,7 +2,6 @@ from flask import Flask, render_template
 from flask_caching import Cache
 from pathlib import Path
 import google_sheets_api
-import threading
 
 SHEET_ID = '1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ'
 THIS_FOLDER = Path(__file__).parent.resolve()
@@ -25,7 +24,5 @@ def index():
 
 # main driver function
 if __name__ == '__main__':
-    # refresh token.json every 6 hours
-    threading.Thread(target=google_sheets_api.scheduled_token_refresh, daemon=True).start()
     # run() method of Flask class runs the application
     app.run(debug=False)

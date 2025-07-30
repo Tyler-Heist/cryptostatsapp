@@ -1,41 +1,21 @@
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.oauth2.credentials import Credentials
-from google.auth.transport.requests import Request
+from google.oauth2.service_account import Credentials
 from googleapiclient.errors import HttpError
 from googleapiclient.discovery import build
 from pathlib import Path
 import pandas as pd
-import time
-import os
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 THIS_FOLDER = Path(__file__).parent.resolve()
-CREDENTIALS_PATH = THIS_FOLDER / 'credentials.json'
-TOKEN_PATH = THIS_FOLDER / 'token.json'
+CREDS_FILE = THIS_FOLDER / 'creds.json'
 
 
 def validate_creds() -> Credentials:
-    creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first time.
-    if os.path.exists(str(TOKEN_PATH)):
-        creds = Credentials.from_authorized_user_file(str(TOKEN_PATH), SCOPES)
-    # If there are no valid credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                client_secrets_file=str(CREDENTIALS_PATH), scopes=SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open(TOKEN_PATH, 'w') as token:
-            token.write(creds.to_json())
-    return creds
+    # Load and return service account credentials from the JSON key file.
+    return Credentials.from_service_account_file(str(CREDS_FILE), scopes=SCOPES)
 
 
-def get_data(spreadsheet_id: str, spreadsheet_range: str, df_bool: bool=True) -> pd.DataFrame | list:
+def get_data(spreadsheet_id: str, spreadsheet_range: str, df_bool: bool = True) -> pd.DataFrame | list:
     creds = validate_creds()
 
     try:
@@ -90,14 +70,3 @@ def append_rows(data: pd.DataFrame | list, spreadsheet_id: str, spreadsheet_rang
         request.execute()
     except HttpError as e:
         raise RuntimeError(f'Failed to append rows in {spreadsheet_range}: {e}')
-
-
-def scheduled_token_refresh():
-    while True:
-        try:
-            # validate creds/refresh token
-            validate_creds()
-        except Exception as e:
-            print(f'Credential refresh failed: {e}')
-        # perform validation/refresh every 6 hours
-        time.sleep(60 * 60 * 6)
