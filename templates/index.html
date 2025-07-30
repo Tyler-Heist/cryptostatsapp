@@ -113,24 +113,26 @@
           <div class="description">
             <h1>How it works</h1>
             <p>
-                <b>1.</b> The price of Bitcoin is retrieved from
-                <a href="https://cointelegraph.com/bitcoin-price-index"
-                target="_blank" rel="noopener noreferrer">Cointelegraph</a>
-                every hour and stored in
-                <a href="https://docs.google.com/spreadsheets/d/1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ/edit#gid=0"
-                target="_blank" rel="noopener noreferrer">this</a>
-                Google Sheets file.
+              <b>1.</b> Retrieve the current price of Bitcoin from
+              <a href="https://www.coindesk.com/"
+              target="_blank" rel="noopener noreferrer">Coindesk</a>
+              every hour and store it in
+              <a href="https://docs.google.com/spreadsheets/d/1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ/edit#gid=0"
+              target="_blank" rel="noopener noreferrer">this</a>
+              Google Sheets file.
             </p>
             <p>
-                <b>2.</b> At midnight every night, the hours when Bitcoin's highest and lowest price occurred are stored in
-                <a href="https://docs.google.com/spreadsheets/d/1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ/edit#gid=1815142441"
-                target="_blank" rel="noopener noreferrer">this</a>
-                Google Sheets file.
+              <b>2.</b> At midnight each day,
+                the hours when Bitcoin's highest and lowest price occurred get recorded in the same
+              <a href="https://docs.google.com/spreadsheets/d/1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ/edit#gid=1815142441"
+              target="_blank" rel="noopener noreferrer">Google Sheets file.</a>
             </p>
-            <p><b>3.</b> The modes for the highest price and lowest price times are calculated.</p>
             <p>
-                <b>4.</b> Accuracy is calculated by dividing the number of times the mode occurred for the high/low times by
-                the total number of data points.
+              <b>3.</b> The most common (mode) times for the highest price and lowest price times are calculated.
+            </p>
+            <p>
+              <b>4.</b> The accuracy of these modes is calculated by dividing the number of times the mode occurred for the high/low times by
+              the total number of data points.
             </p>
           </div>
           <div class="description2">
@@ -153,15 +155,13 @@
             </p>
             <div class="data-table-sd">
               <p class="data-table1">
-              Source code: <a href="https://github.com/Tyler-Heist/cryptostatsapp" target="_blank">Github</a>
+              Source code: <a href="https://github.com/Tyler-Heist/cryptostatsapp" target="_blank">GitHub</a>
               </p>
             </div>
             <div class="data-table-sd">
               <p class="data-table2">
                 Data source:
-                <a href="https://cointelegraph.com/bitcoin-price-index" target="_blank" rel="noopener noreferrer">
-                Cointelegraph
-                </a>
+                <a href="https://www.coindesk.com/price/bitcoin" target="_blank" rel="noopener noreferrer">Coindesk</a>
               </p>
             </div>
           </div>
