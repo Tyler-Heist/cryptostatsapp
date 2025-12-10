@@ -10,6 +10,7 @@ import logging
 import sys
 import time
 import os
+from pushbullet import Pushbullet
 
 
 handler = RotatingFileHandler('cryptostatsapp.log', maxBytes=5*1024*1024, backupCount=5)
@@ -27,10 +28,16 @@ PRICE_DATA_SHEET = 'Price_Data!A1:D'
 PREVIOUS_DAY_STATS_SHEET = 'Previous_Day_Stats!A:E'
 STATS_SHEET = 'Stats!A1:I'
 
+PUSHBULLET_TOKEN = os.getenv('PUSHBULLET_TOKEN')
+pb = Pushbullet(PUSHBULLET_TOKEN)
+
 
 def main() -> None:
     try:
         logging.info(f"{'-' * 35} STARTING  EXECUTION {'-' * 35}")
+
+        pb.push_note(title='CryptoStatsApp', body='Script Started')
+
         # Parameters for API call
         params = {
             'market': 'coinbase',
@@ -50,9 +57,9 @@ def main() -> None:
             if not current_price:
                 logging.warning(f'Price data not found: {response_data} - Status Code: {response.status_code}')
         except requests.exceptions.RequestException as e:
-            logging.error(f'An error occurred: {e}')
+            logging.exception(f'An error occurred: {e}')
         except ValueError as e:
-            logging.error(f'JSON error: {e}')
+            logging.exception(f'JSON error: {e}')
 
         # Get date info
         now = datetime.datetime.now()
@@ -144,7 +151,7 @@ def main() -> None:
 # used to avoid execution when file is imported into another file
 if __name__ == "__main__":
     try:
-        # main()
+        main()
         schedule.every().hour.at('01:00').do(main)
         while True:
             schedule.run_pending()
