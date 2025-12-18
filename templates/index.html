@@ -77,12 +77,6 @@
                 <td><b>Days Running: {{ days_running }}</b></td>
               </tr>
               <tr>
-                <td>Yesterday's Low: {{ low_time }}</td>
-              </tr>
-              <tr>
-                <td>Low Price: {{ low_price }}</td>
-              </tr>
-              <tr>
                 <td>Low Mode: {{ low_mode }}</td>
               </tr>
               <tr>
@@ -96,12 +90,6 @@
                 <td><b>Last Updated: {{ data_from }}</b></td>
               </tr>
               <tr>
-                <td>Yesterday's High: {{ high_time }}</td>
-              </tr>
-              <tr>
-                <td>High Price: {{ high_price }}</td>
-              </tr>
-              <tr>
                 <td>High Mode: {{ high_mode }}</td>
               </tr>
               <tr>
@@ -113,27 +101,27 @@
           <div class="description">
             <h1>How it works</h1>
             <p>
-              <b>1.</b> Retrieve the current price of Bitcoin from
-              <a href="https://www.coindesk.com/"
-              target="_blank" rel="noopener noreferrer">Coindesk</a>
-              every hour and store it in
-              <a href="https://docs.google.com/spreadsheets/d/1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ/edit#gid=0"
-              target="_blank" rel="noopener noreferrer">this</a>
-              Google Sheets file.
-            </p>
-            <p>
-              <b>2.</b> At midnight each day,
-                the hours when Bitcoin's highest and lowest price occurred get recorded in the same
-              <a href="https://docs.google.com/spreadsheets/d/1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ/edit#gid=1815142441"
-              target="_blank" rel="noopener noreferrer">Google Sheets file.</a>
-            </p>
-            <p>
-              <b>3.</b> The most common (mode) times for the highest price and lowest price times are calculated.
-            </p>
-            <p>
-              <b>4.</b> The accuracy of these modes is calculated by dividing the number of times the mode occurred for the high/low times by
-              the total number of data points.
-            </p>
+              <ol>
+                <li>
+                  Retrieve the current price of Bitcoin from
+                  <a href="https://www.coindesk.com/" target="_blank" rel="noopener noreferrer">Coindesk</a>
+                  every hour and store it in
+                  <a href="https://docs.google.com/spreadsheets/d/1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ/edit#gid=0"
+                  target="_blank" rel="noopener noreferrer">this</a>
+                  Google Sheets file.
+                </li>
+                <li>
+                  Filter data into another tab on the spreadsheet and calculate low hour, low price, high hour, high price.
+                </li>
+                <li>
+                  Calculate modes for low hours and high hours.
+                </li>
+                <li>
+                  Determine how many times low hour and high hour show up in entire dataset to calculate "accuracy,"
+                  or percentage of times low hour or high hour occur.
+                </li>
+              </ol>
+
           </div>
           <div class="description2">
             <p>

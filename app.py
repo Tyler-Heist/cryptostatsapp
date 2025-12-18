@@ -14,12 +14,17 @@ cache = Cache(app, config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT':
 @app.route('/')
 @cache.cached()
 def index():
-    response = google_sheets_api.get_data(spreadsheet_id=SHEET_ID, spreadsheet_range='Stats!A1:I', df_bool=False)
+    response = google_sheets_api.get_data(spreadsheet_id=SHEET_ID, spreadsheet_range='Stats!A1:F', df_bool=False)
     recent_stats = response[-1]
-    return render_template('index.html', days_running=len(response)-1, data_from=recent_stats[0],
-                           low_time=recent_stats[1], low_price=recent_stats[2], low_mode=recent_stats[3],
-                           low_accuracy=recent_stats[4], high_time=recent_stats[5], high_price=recent_stats[6],
-                           high_mode=recent_stats[7], high_accuracy=recent_stats[8])
+    return render_template(
+        template_name_or_list='index.html',
+        days_running=recent_stats[0],
+        data_from=recent_stats[1],
+        low_mode=recent_stats[2],
+        low_accuracy=recent_stats[3],
+        high_mode=recent_stats[4],
+        high_accuracy=recent_stats[5]
+    )
 
 
 # main driver function
