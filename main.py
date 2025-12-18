@@ -26,8 +26,6 @@ load_dotenv()
 
 SPREADSHEET_ID = '1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ'
 PRICE_DATA_SHEET = 'Price_Data!A1:D'
-PREVIOUS_DAY_STATS_SHEET = 'Previous_Day_Stats!A:E'
-STATS_SHEET = 'Stats!A1:I'
 
 GSHEET_API_KEY = os.getenv('API_KEY')
 PUSHBULLET_TOKEN = os.getenv('PUSHBULLET_TOKEN')
