@@ -33,6 +33,10 @@ PUSHBULLET_TOKEN = os.getenv('PUSHBULLET_TOKEN')
 pb = Pushbullet(PUSHBULLET_TOKEN)
 
 
+def pb_checkin() -> None:
+    pb.push_note(title='Weekly Checkin', body='Everything is still going well!')
+
+
 @retry(stop=stop_after_attempt(3), wait=wait_fixed(5))
 def get_price_data() -> float | None:
     # Parameters for API call
@@ -111,6 +115,7 @@ if __name__ == "__main__":
         # main()
         pb.push_note(title='CryptoStatsApp', body='Script Started')
         schedule.every().hour.at('01:00').do(main)
+        schedule.every().week.at('01:00').do(pb_checkin)
         while True:
             schedule.run_pending()
             time.sleep(1)
