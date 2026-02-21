@@ -115,7 +115,7 @@ if __name__ == "__main__":
         # main()
         pb.push_note(title='CryptoStatsApp', body='Script Started')
         schedule.every().hour.at('01:00').do(main)
-        schedule.every().week.at('01:00').do(pb_checkin)
+        schedule.every(1).weeks.do(pb_checkin)
         while True:
             schedule.run_pending()
             time.sleep(1)
