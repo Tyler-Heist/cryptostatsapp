@@ -7,10 +7,9 @@ from logging.handlers import RotatingFileHandler
 
 import requests
 import schedule
-from tenacity import retry, wait_fixed, RetryError
 from dotenv import load_dotenv
 from pushbullet import Pushbullet
-from tenacity import stop_after_attempt
+from tenacity import retry, wait_fixed, RetryError, stop_after_attempt
 from tzlocal import get_localzone
 
 import google_sheets_api
@@ -27,8 +26,6 @@ load_dotenv()
 
 SPREADSHEET_ID = '1OKWn63iR-B9nxYuqebhIDhiasZWOT-61gUeoJkq8dsQ'
 PRICE_DATA_SHEET = 'Price_Data!A1:D'
-
-GSHEET_API_KEY = os.getenv('API_KEY')
 PUSHBULLET_TOKEN = os.getenv('PUSHBULLET_TOKEN')
 pb = Pushbullet(PUSHBULLET_TOKEN)
 
@@ -39,30 +36,24 @@ def pb_checkin() -> None:
 
 @retry(stop=stop_after_attempt(3), wait=wait_fixed(5))
 def get_price_data() -> float | None:
-    # Parameters for API call
-    params = {
-        'market': 'coinbase',
-        'instruments': 'BTC-USD',
-        'apply_mapping': 'true',
-        'api_key': GSHEET_API_KEY
-    }
+    product = "BTC-USD"
+    url = f"https://api.exchange.coinbase.com/products/{product}/ticker"
 
-    # Get current BTC price coindesk.com via API (gets data from Coinbase)
-    logging.info('Calling coindesk API')
+    logging.info(f"Fetching price data from {url}")
     try:
-        response = requests.get(url='https://data-api.coindesk.com/spot/v1/latest/tick', params=params, timeout=3)
+        response = requests.get(url, headers={"Accept": "application/json", "User-Agent": "CryptoStatsApp"}, timeout=10)
         response.raise_for_status()
         response_data = response.json()
-        current_price = response_data.get('Data', {}).get('BTC-USD', {}).get('PRICE', '')
+        current_price = response_data.get('price')
         if not current_price:
             logging.warning(f'Price data not found: {response_data} - Status Code: {response.status_code}')
             return None
-        return current_price
+        return float(current_price)
     except requests.exceptions.RequestException as e:
         logging.exception(f'An error occurred: {e}')
         raise
-    except ValueError as e:
-        logging.exception(f'JSON error: {e}')
+    except (ValueError, TypeError) as e:
+        logging.exception(f'JSON/price parsing error: {e}')
         raise
 
 
