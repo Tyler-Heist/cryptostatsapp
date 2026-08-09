@@ -1,5 +1,6 @@
 *.json
 .env
 *.log
+*.csv
 recover_btc_hourly_prices.py
 /DOCUMENTATION/
